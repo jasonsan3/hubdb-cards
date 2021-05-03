@@ -1,0 +1,156 @@
+<!-- Setting up the search and filtering form -->
+<div id="search-container">
+<form id="form_id" method="get">
+    <div class="location-container">
+        <label for="address">Location</label>
+        <select id="address" name="address" form="form_id" onChange="this.form.submit()">
+            <option value="show-all">Show All</option>
+            {% set address = hubdb_table_column(xxx, "address").options %}
+            {% for choice in address %}
+                {% set address_list = address_list~choice.id|list %}
+                {% if choice.id == request.query_dict.address %}
+                    <option selected="selected" value="{{ choice.id }}">{{ choice.name }}</option>
+                {% else %}
+                    <option value="{{ choice.id }}">{{ choice.name }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+    <div class="specialty-container">
+      <label for="specialty">Specialty</label>
+      <select id="specialty" name="specialty" form="form_id" onChange="this.form.submit()">
+          <option value="show-all">Show All</option>
+        {% set specialty = hubdb_table_column(xxx, "specialty").options %}
+        {% for choice in specialty %}
+          {% set specialty_list = specialty_list~choice.id|list %}
+          {% if choice.id == request.query_dict.specialty %}
+            <option selected="selected" value="{{ choice.id }}">{{ choice.name }}</option>
+          {% else %}
+            <option value="{{ choice.id }}">{{ choice.name }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+    </div>
+    <div class="address-container">
+      <label for="search-by-location">Address</label>
+      <input name="location" type="text" id="search-by-location" class="autocomplete" placeholder="Search by address...">
+    </div>
+    <div class="name-container">
+      <label for="search-by-name">Doctor Name</label>
+      <input name="name" type="text" id="search-by-name" class="autocomplete" placeholder="Search by Doctor name...">
+    </div>
+    <div class="submit-button-container">
+      <input id="submit-button" type="submit" value="search">
+    </div>
+</form>
+</div>
+
+<!-- sets the different query parameters using submitted input for hubdb query -->
+
+{% set queryparam = "" %}
+<!--Address only-->
+{% if request.query_dict.address in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49"] and request.query_dict.name == "" and request.query_dict.location == "" and request.query_dict.specialty == "show-all" %}
+    {% set queryparam = queryparam ~ "&address="~request.query_dict.address|urlencode %}
+{% endif %}
+<!--Address and Name-->
+{% if request.query_dict.address in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49"] and request.query_dict.name != "" and request.query_dict.location == "" and request.query_dict.specialty == "show-all" %}
+    {% set queryparam = queryparam ~ "&address="~request.query_dict.address|urlencode~"&name__icontains="~request.query_dict.name|urlencode %}
+{% endif %}
+<!--Name only-->
+{% if request.query_dict.address == "show-all" and request.query_dict.name != "" and locations == "" and request.query_dict.location == ""  %}
+    {% set queryparam = queryparam~"&name__icontains="~request.query_dict.name|urlencode %}
+{% endif %}
+<!--Address and Location-->
+{% if request.query_dict.address in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49"] and request.query_dict.name == "" and request.query_dict.location != "" and request.query_dict.specialty == "show-all" %}
+    {% set queryparam = queryparam ~ "&address="~request.query_dict.address|urlencode~"&location__icontains="~request.query_dict.location|urlencode %}
+{% endif %}
+<!--Address, Location, and Name-->
+{% if request.query_dict.address in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49"] and request.query_dict.name != "" and request.query_dict.location != "" and request.query_dict.specialty == "show-all" %}
+    {% set queryparam = queryparam ~ "&address="~request.query_dict.address|urlencode~"&name__icontains="~request.query_dict.name|urlencode~"&location__icontains="~request.query_dict.location|urlencode %}
+{% endif %}
+<!--Location and Name-->
+{% if request.query_dict.address == "show-all" and request.query_dict.name != "" and request.query_dict.location != "" and request.query_dict.specialty == "show-all" %}
+    {% set queryparam = queryparam ~ "&name__icontains="~request.query_dict.name|urlencode~"&location__icontains="~request.query_dict.location|urlencode %}
+{% endif %}
+<!--Location only-->
+{% if request.query_dict.address == "show-all" and request.query_dict.name == "" and request.query_dict.location != "" and request.query_dict.specialty == "show-all" %}
+    {% set queryparam = queryparam ~ "&location__icontains="~request.query_dict.location|urlencode %}
+{% endif %}
+
+<!--Address, Name, Location, and Specialty-->
+{% if request.query_dict.address in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49"] and request.query_dict.name != "" and request.query_dict.location != "" and request.query_dict.specialty in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42"] %}
+    {% set queryparam = queryparam ~ "&address="~request.query_dict.address|urlencode~"&name__icontains="~request.query_dict.name|urlencode~"&location__icontains="~request.query_dict.location|urlencode~"&specialty="~request.query_dict.specialty|urlencode %}
+{% endif %}
+
+<!--Address, Location, and Specialty-->
+{% if request.query_dict.address in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49"] and request.query_dict.name == "" and request.query_dict.location != "" and request.query_dict.specialty in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42"] %}
+    {% set queryparam = queryparam ~ "&address="~request.query_dict.address|urlencode~"&location__icontains="~request.query_dict.location|urlencode~"&specialty="~request.query_dict.specialty|urlencode %}
+{% endif %}
+<!--Address, Name, and Specialty-->
+{% if request.query_dict.address in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49"] and request.query_dict.name != "" and request.query_dict.location == "" and request.query_dict.specialty in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42"] %}
+    {% set queryparam = queryparam ~ "&address="~request.query_dict.address|urlencode~"&name__icontains="~request.query_dict.name|urlencode~"&location__icontains="~request.query_dict.specialty|urlencode %}
+{% endif %}
+<!--Name, Location, and Specialty-->
+{% if request.query_dict.address == "show-all" and request.query_dict.name != "" and request.query_dict.location != "" and request.query_dict.specialty in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42"] %}
+    {% set queryparam = queryparam ~ "&name__icontains="~request.query_dict.name|urlencode~"&location__icontains="~request.query_dict.location|urlencode~"&specialty="~request.query_dict.specialty|urlencode %}
+{% endif %}
+<!--Location and Specialty-->
+{% if request.query_dict.address == "show-all" and request.query_dict.name == "" and request.query_dict.location != "" and request.query_dict.specialty in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42"] %}
+    {% set queryparam = queryparam ~ "&location__icontains="~request.query_dict.location|urlencode~"&specialty="~request.query_dict.specialty|urlencode %}
+{% endif %}
+<!--Name and Specialty-->
+{% if request.query_dict.address == "show-all" and request.query_dict.name != "" and request.query_dict.location == "" and request.query_dict.specialty in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42"] %}
+    {% set queryparam = queryparam ~ "&name__icontains="~request.query_dict.name|urlencode~"&specialty="~request.query_dict.specialty|urlencode %}
+{% endif %}
+<!--Address and Specialty-->
+{% if request.query_dict.address in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49"] and request.query_dict.name == "" and request.query_dict.location == "" and request.query_dict.specialty in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42"] %}
+    {% set queryparam = queryparam ~ "&address="~request.query_dict.address|urlencode~"&location__icontains="~request.query_dict.specialty|urlencode %}
+{% endif %}
+<!--Specialty Only-->
+{% if request.query_dict.address == "show-all" and request.query_dict.name == "" and request.query_dict.location == "" and request.query_dict.specialty in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42"] %}
+    {% set queryparam = queryparam ~ "&specialty="~request.query_dict.specialty|urlencode %}
+{% endif %}
+
+
+<div id="card-container" class="row-fluid-wrapper">
+  <div class="row-fluid">
+
+{% set table = hubdb_table_rows(xxx, queryparam) %}
+
+{% if table == [] %}
+    <p class='align-center'>Sorry, no listings found for that Search. Try changing your filter and search again.</p>
+{% else %}
+  {% for row in table %}
+<div id="single-card">
+    <div class="{{ row["type"].name }}">
+        <div class="physician-image"><img src="{{ row["photo"].url}}"></div>
+            <div class="physician-info">
+              <h2>{{ row["name"] }}, {{ row["credentials"] }}</h2>
+              <h3>{{ row["specialty"].name }}</h3>
+              <div class="location">
+                  <div class="geo-icon"><img src="xxx"></div>
+                  <div class="address">
+                    {% set address_google_map = row["street_name"] + '+' + row["city"] + '+' + row["state"] + '+' + row["postal_code"] %}
+                    <h4>{% if row.address %}{{ row["address"].name }}<br />{% else %}{% endif %}<a href="https://www.google.com/maps/place/{{ address_google_map|replace(' ', '+')|replace(',', '%2C')|replace('#', '%23') }}">{{ row["street_name"] }}<br />{{ row["city"] }}, {{ row["state"] }} {{ row["postal_code"] }}</a></h4>
+                </div>
+              </div>
+              {% set phone_number_string = row["phone_number"] %}
+              <div class="phone-icon"><img src="xxx"></div><h4><a href="tel:{{ phone_number_string|cut('(')|cut(')')|cut(' ')|cut('-') }}">{{ row["phone_number"] }}</a></h4>
+              <div class="separator"></div>
+              
+                {% if row.medical_group == 1 %}
+                  <div class="wilson-health-medical-group center">
+                    <img src="xxx"> 
+                  </div>
+                {% else %}
+                {% endif %}
+
+              <a class="sched-appt center" href="{{ row["schedule_appointment"] }}"><div class="button center">Schedule Appt</div></a>
+              <h4 class="center">Accepting Patients: {% if row.accepting_patients == 1 %}Yes {% else %}No{% endif %}</h4>
+            </div>
+    </div>            
+</div>
+  {% endfor %}
+  {% endif %}
+  </div>
+</div>
