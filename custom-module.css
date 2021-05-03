@@ -1,0 +1,188 @@
+#search-container {
+  padding: 15px;
+  float: left;
+  width: 100%;
+  max-width: 1200px;
+}
+
+input[type=text], select {
+  width: 100%;
+  max-width: 220px;
+  padding: 12px 20px;
+  margin: 8px 10px;
+  display: block;
+  border: 2px solid #979797;
+  border-radius: 0px;
+  box-sizing: border-box;
+}
+
+label {
+  margin: 0 10px;
+}
+
+input[type=text]:focus {
+  border: 2px solid #96368D;
+}
+
+.location-container, .specialty-container, .address-container, .name-container {
+  display: inline-block;
+}
+
+.submit-button-container {
+  width: 100%;  
+  max-width: 965px;
+}
+
+input[type=submit] {
+  width: 20%;
+  display: block;
+  float: right;
+  background-color: #96368D;
+  text-transform: uppercase;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #702869;
+}
+
+#card-container {
+  padding: 15px;
+  float: left;
+  width: 100%;
+  max-width: 1200px;
+}
+
+#single-card {
+  display: inline-block;
+  padding: 12px 16px 32px 16px;
+  background-color: rgba(255,255,255,0.24);
+  box-shadow: 0 0 15px 0 rgba(0,0,0,0.18);
+  margin: 20px 20px 0px 0px;
+  vertical-align: top;
+}
+
+#single-card:nth-of-type(3n+1) {
+  margin-left: 0px;
+}
+
+#single-card h2 {
+  font-size: 1.2em;
+}
+
+#single-card h3 {
+  font-size: 1.0em;
+  font-weight: 100;
+}
+
+#single-card h4 {
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+.physician-image {
+  margin-bottom: 18px;
+  width: 100%;
+}
+
+.physician-image img {
+  width: 100%;
+  max-width: 350px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.location {
+  margin-bottom: 16px;
+} 
+
+.location div {
+  display: inline-block;
+}
+
+.geo-icon, .phone-icon {
+  box-sizing: border-box;
+  float: left;
+  padding: 0px 12px 0px 0px;
+}
+
+a[href^="tel:"] {
+  color: black;
+  text-decoration: none;
+}
+
+.separator {
+  margin: 30px 0px 20px;
+  border-bottom: 1px solid #979797;
+}
+
+.button {
+  height: 50px;
+  width: 218px;
+  border-radius: 3px;
+  background-color: #96368D;
+  color: #ffffff;
+  font-family: "Nunito Sans";
+  font-size: 1em;
+  font-weight: bold;
+  text-align: center;
+}
+
+.button:hover {
+  background-color: #702869;
+}
+
+.sched-appt:link, .sched-appt:hover, .sched-appt:visited {
+   text-transform: uppercase;
+   font-weight: bold;
+   color: white;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.wilson-health-medical-group {
+  margin: 10px 10px 20px 10px;  
+}
+
+
+/*Mobile Styling*/
+@media (max-width: 767px) {
+  #single-card {
+    width: 99.999999993%;
+    *width: 99.9468085036383%;
+  }
+  input[type=submit] {
+    width: 100%;
+    float: left;
+    padding: 14px 20px;
+    margin: 8px 0;
+  }
+}
+
+/*Form Styling*/
+
+/*Medium screen styling*/
+@media (min-width: 768px) and (max-width: 1139px) {
+  #single-card {
+    width: 33.491712705%;
+    *width: 33.4385212156383%;
+  }
+}
+
+/*Full screen styling*/
+@media (min-width: 1280px) {
+  #single-card {
+    width: 25.076923077%;
+    *width: 25.0237315876383%;
+  }
+}
